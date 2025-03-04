@@ -6,57 +6,66 @@
     <title>PetShop</title>
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
   </head>
-  <body>
-    <main class="max-w-[700px] mx-auto bg-zinc-100 p-10 font-mono">
-      <h1 class="text-2xl font-bold text-center text-indigo-700">
+  <body class="bg-zinc-900 text-white">
+    <main
+      class="max-w-[700px] mx-auto bg-zinc-800 p-10 font-mono rounded-lg shadow-md"
+    >
+      <h1 class="text-2xl font-bold text-center text-indigo-400">
         🐶 PetShop - Management
       </h1>
 
       <!-- Add Pet Form -->
-      <section class="mt-5 p-5 border rounded bg-white flex flex-col gap-2.5">
-        <h2 class="text-md font-semibold">Add a Pet</h2>
+      <section
+        class="mt-5 p-5 border border-zinc-700 rounded bg-zinc-700 flex flex-col gap-2.5"
+      >
+        <h2 class="text-md font-semibold text-indigo-300">Add a Pet</h2>
 
         <input
           type="text"
           id="petName"
           placeholder="Pet Name"
-          class="p-2 border rounded w-full"
+          class="p-2 border border-zinc-600 rounded w-full bg-zinc-800 text-white"
         />
 
         <input
           type="text"
           id="petType"
           placeholder="Pet Type"
-          class="p-2 border rounded w-full"
+          class="p-2 border border-zinc-600 rounded w-full bg-zinc-800 text-white"
         />
 
         <input
           type="number"
           id="petAge"
           placeholder="Pet Age"
-          class="p-2 border rounded w-full"
+          class="p-2 border border-zinc-600 rounded w-full bg-zinc-800 text-white"
         />
 
-        <button class="bg-zinc-100 rounded py-2.5" onclick="addPet()">
+        <button
+          class="bg-indigo-600 hover:bg-indigo-500 rounded py-2.5 text-white"
+          onclick="addPet()"
+        >
           🐶 Add Pet
         </button>
       </section>
 
       <!-- Pet list -->
-      <section class="mt-5 p-5 border rounded bg-white flex flex-col gap-2.5">
-        <h2 class="text-md font-semibold">Pet List</h2>
+      <section
+        class="mt-5 p-5 border border-zinc-700 rounded bg-zinc-700 flex flex-col gap-2.5"
+      >
+        <h2 class="text-md font-semibold text-indigo-300">Pet List</h2>
 
-        <table>
+        <table class="w-full">
           <thead>
-            <tr class="bg-zinc-100 text-left">
-              <th>Name</th>
-              <th>Type</th>
-              <th>Age</th>
+            <tr class="bg-zinc-600 text-left">
+              <th class="p-2">Name</th>
+              <th class="p-2">Type</th>
+              <th class="p-2">Age</th>
             </tr>
           </thead>
           <tbody id="petsTable">
             <tr>
-              <td colspan="3" class="bg-yellow-100 text-center py-2.5">
+              <td colspan="3" class="bg-yellow-800 text-center py-2.5">
                 No pets yet
               </td>
             </tr>
@@ -65,41 +74,64 @@
       </section>
 
       <!-- Add Vet Form -->
-      <section class="mt-5 p-5 border rounded bg-white flex flex-col gap-2.5">
-        <h2 class="text-md font-semibold">Add a Vet</h2>
+      <section
+        class="mt-5 p-5 border border-zinc-700 rounded bg-zinc-700 flex flex-col gap-2.5"
+      >
+        <h2 class="text-md font-semibold text-indigo-300">Add a Vet</h2>
 
         <input
           type="text"
           id="vetName"
           placeholder="Vet Name"
-          class="p-2 border rounded w-full"
+          class="p-2 border border-zinc-600 rounded w-full bg-zinc-800 text-white"
         />
 
         <input
           type="text"
           id="vetSpecialization"
           placeholder="Vet Specialization"
-          class="p-2 border rounded w-full"
+          class="p-2 border border-zinc-600 rounded w-full bg-zinc-800 text-white"
         />
 
-        <button class="bg-zinc-100 rounded py-2.5" id="addVetButton">
+        <div class="relative">
+          <input
+            type="text"
+            id="vetLocation"
+            placeholder="Vet Location"
+            class="p-2 border border-zinc-600 rounded w-full bg-zinc-800 text-white"
+          />
+          <ul
+            id="locationSuggestion"
+            class="absolute left-0 right-0 bg-zinc-800 text-white border rounded max-h-40 overflow-y-auto hidden"
+          ></ul>
+        </div>
+
+        <p id="locationValidation" class="text-sm mt-2 hidden"></p>
+
+        <button
+          class="bg-indigo-600 hover:bg-indigo-500 rounded py-2.5 text-white"
+          id="addVetButton"
+        >
           👨‍⚕️ Add Vet
         </button>
       </section>
 
       <!-- Vet list -->
-      <section class="mt-5 p-5 border rounded bg-white flex flex-col gap-2.5">
-        <h2 class="text-md font-semibold">Vet List</h2>
-        <table>
+      <section
+        class="mt-5 p-5 border border-zinc-700 rounded bg-zinc-700 flex flex-col gap-2.5"
+      >
+        <h2 class="text-md font-semibold text-indigo-300">Vet List</h2>
+        <table class="w-full">
           <thead>
-            <tr class="bg-zinc-100 text-left">
-              <th>Name</th>
-              <th>Specialization</th>
+            <tr class="bg-zinc-600 text-left">
+              <th class="p-2">Name</th>
+              <th class="p-2">Specialization</th>
+              <th class="p-2">Location</th>
             </tr>
           </thead>
           <tbody id="vetsTable">
             <tr>
-              <td colspan="3" class="bg-yellow-100 text-center py-2.5">
+              <td colspan="3" class="bg-yellow-800 text-center py-2.5">
                 No vet yet
               </td>
             </tr>
@@ -108,21 +140,41 @@
       </section>
 
       <!-- Assign vet to pet -->
-      <section class="mt-5 p-5 border rounded bg-white flex flex-col gap-2.5">
-        <h2 class="text-md font-semibold">Assign Vet to Pet</h2>
+      <section
+        class="mt-5 p-5 border border-zinc-700 rounded bg-zinc-700 flex flex-col gap-2.5"
+      >
+        <h2 class="text-md font-semibold text-indigo-300">Assign Vet to Pet</h2>
 
-        <select class="p-2 border rounded w-full" id="assignPet"></select>
-        <select class="p-2 border rounded w-full" id="assignVet"></select>
+        <select
+          class="p-2 border border-zinc-600 rounded w-full bg-zinc-800 text-white"
+          id="assignPet"
+        ></select>
+        <select
+          class="p-2 border border-zinc-600 rounded w-full bg-zinc-800 text-white"
+          id="assignVet"
+        ></select>
 
-        <button class="bg-zinc-100 rounded py-2.5" onclick="assignVetToPet()">
+        <button
+          class="bg-indigo-600 hover:bg-indigo-500 rounded py-2.5 text-white"
+          onclick="assignVetToPet()"
+        >
           Assign
         </button>
       </section>
 
-      <section class="mt-5 p-5 border rounded bg-white flex flex-col gap-2.5">
-        <h2 class="text-md font-semibold">Assign Vet to Pet</h2>
+      <section
+        class="mt-5 p-5 border border-zinc-700 rounded bg-zinc-700 flex flex-col gap-2.5"
+      >
+        <h2 class="text-md font-semibold text-indigo-300">Assignments</h2>
 
-        <ul id="assignmentList" class="list-disc pl-5 text-zinc-700"></ul>
+        <ul
+          id="assignmentList"
+          class="list-disc pl-5 text-zinc-300 overflow-hidden"
+        >
+          <li class="bg-yellow-800 text-center py-2.5 -ml-5">
+            No vet assigned yet
+          </li>
+        </ul>
       </section>
     </main>
 
