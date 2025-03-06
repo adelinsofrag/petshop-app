@@ -43,7 +43,7 @@
 
         <button
           class="bg-indigo-600 hover:bg-indigo-500 rounded py-2.5 text-white"
-          onclick="addPet()"
+          onclick="handleAddPetButtonClick()"
         >
           🐶 Add Pet
         </button>
@@ -106,10 +106,13 @@
           ></ul>
         </div>
 
-        <p id="locationValidation" class="text-sm mt-2 hidden"></p>
+        <p
+          id="messageElement"
+          class="text-sm mt-2 bg-green-200 text-green-700 hidden text-center py-2.5"
+        ></p>
 
         <button
-          class="bg-indigo-600 hover:bg-indigo-500 rounded py-2.5 text-white"
+          class="bg-indigo-600 hover:bg-indigo-500 rounded py-2.5 text-white disabled:bg-indigo-400 disabled:cursor-not-allowed"
           id="addVetButton"
         >
           👨‍⚕️ Add Vet
@@ -171,7 +174,10 @@
           id="assignmentList"
           class="list-disc pl-5 text-zinc-300 overflow-hidden"
         >
-          <li class="bg-yellow-800 text-center py-2.5 -ml-5">
+          <li
+            class="bg-yellow-800 text-center py-2.5 -ml-5"
+            id="assignmentListMessage"
+          >
             No vet assigned yet
           </li>
         </ul>

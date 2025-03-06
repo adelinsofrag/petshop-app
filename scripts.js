@@ -9,28 +9,19 @@ const petShop = {
     updateSelectOptions();
   },
 
-  addVet(name, specialization, location, callback) {
-    validateLocation(location, (response) => {
-      if (response.validatedLocation) {
-        this.vets.push({
-          name,
-          specialization,
-          location: response.validatedLocation,
-        });
+  addVet(name, specialization, location) {
+    this.vets.push({
+      name,
+      specialization,
+      location,
+    });
 
-        updateVetsTable();
-        updateSelectOptions();
+    updateVetsTable();
+    updateSelectOptions();
 
-        callback({
-          success: true,
-          validatedLocation: response.validatedLocation,
-        });
-      } else {
-        callback({
-          success: false,
-          message: response.message,
-        });
-      }
+    showMessage({
+      success: true,
+      validatedLocation: location,
     });
   },
 
@@ -44,15 +35,17 @@ const petShop = {
     );
 
     if (vetToBeAssigned && petToBeAssigned) {
+      document.getElementById("assignmentListMessage").classList.add("hidden");
+
       document.getElementById(
         "assignmentList"
-      ).innerHTML += `<li>${vetToBeAssigned.name} is assigned to ${petToBeAssigned.name}`;
+      ).innerHTML += `<li><span class="font-bold">${vetToBeAssigned.name}</span> (${vetToBeAssigned.location}) is assigned to <span class="font-bold">${petToBeAssigned.name}</span>`;
     }
   },
 };
 
 // DOM handling Logic
-function addPet() {
+function handleAddPetButtonClick() {
   const name = document.getElementById("petName").value;
   const type = document.getElementById("petType").value;
   const age = document.getElementById("petAge").value;
@@ -62,17 +55,30 @@ function addPet() {
   }
 }
 
-function addVet() {
+function handleAddVetButtonClick() {
   const name = document.getElementById("vetName").value;
   const specialization = document.getElementById("vetSpecialization").value;
   const location = document.getElementById("vetLocation").value;
 
-  const validationMessageElement =
-    document.getElementById("locationValidation");
-  const suggestionsList = document.getElementById("locationSuggestion");
-
   if (name && specialization && location) {
-    petShop.addVet(name, specialization, location, (result) => {
+    petShop.addVet(name, specialization, location);
+
+    showMessage({
+      message: "Vet has been successfully added!",
+      success: true,
+    });
+  } else {
+    showMessage({
+      message: "Please check the empty fields",
+      success: false,
+    });
+  }
+
+  updateVetsTable();
+}
+
+/*
+(result) => {
       if (result.success) {
         // add validation message in vet section
         validationMessageElement.textContent = `Vet has been successfully added in ${result.validatedLocation}`;
@@ -90,11 +96,8 @@ function addVet() {
         validationMessageElement.textContent = result.message;
         validationMessageElement.classList.add("text-red-500");
       }
-    });
-  }
-
-  updateVetsTable();
-}
+    }
+*/
 
 function updatePetsTable() {
   const petsTable = document.getElementById("petsTable");
@@ -135,16 +138,7 @@ function updateSelectOptions() {
     .join("");
 }
 
-// onclick alternative from HTML (check Add Pet button)
-document
-  .querySelector("#addVetButton")
-  .addEventListener("click", () => addVet());
-
-// -----------------
-// Fetch & validate data
-// https://api.geonames.org/searchJSON?q=london&maxRows=2&username=adelin2202
-// -----------------
-function validateLocation(location, callback) {
+function fetchLocationSuggestions(location) {
   const baseURL = "http://api.geonames.org";
   const pathToSearch = "searchJSON";
   const username = "adelin2202";
@@ -167,31 +161,78 @@ function validateLocation(location, callback) {
           li.textContent = placeDetails;
           li.classList.add("p-2", "hover:bg-zinc-500", "cursor-point");
 
-          li.addEventListener("click", () => {
-            // add value to input - what was clicked
-            document.getElementById("vetLocation").value = placeDetails;
-            suggestionsList.classList.add("hidden");
-
-            callback({
-              validatedLocation: placeDetails,
-              message: "Location is valid",
-            });
-          });
+          li.addEventListener("click", () =>
+            handleClickSuggestion(placeDetails)
+          );
 
           suggestionsList.appendChild(li);
           suggestionsList.classList.remove("hidden");
         });
       } else {
-        suggestionsList.innerHTML = `<li class="p-2 hover:bg-zinc-500 cursor-point">No results</li>`;
-        suggestionsList.classList.remove("hidden");
+        showMessage({
+          message: "No results or invalid location",
+          success: false,
+        });
 
-        setTimeout(() => {
-          suggestionsList.classList.add("hidden");
-          callback({
-            validatedLocation: null,
-            message: "No results or invalid location",
-          });
-        }, 2500);
+        document.getElementById('addVetButton').disabled = true
       }
     });
 }
+
+function onInputChange(selectedLocation) {
+  if (selectedLocation.length > 1) {
+    fetchLocationSuggestions(selectedLocation);
+  } else {
+    hideSuggestionsList();
+  }
+}
+
+function handleClickSuggestion(placeDetails) {
+  // add value to input - what was clicked
+  document.getElementById("vetLocation").value = placeDetails;
+
+  hideSuggestionsList();
+
+  showMessage({
+    message: "Location is valid",
+    success: true,
+  });
+}
+
+function showMessage({ message, success }) {
+  const messageElement = document.getElementById("messageElement");
+  messageElement.textContent = message;
+
+  if (success) {
+    messageElement.classList.replace("bg-red-200", "bg-green-200");
+    messageElement.classList.replace("text-red-700", "text-green-700");
+  } else {
+    messageElement.classList.replace("bg-green-200", "bg-red-200");
+    messageElement.classList.replace("text-green-700", "text-red-700");
+  }
+  setTimeout(() => messageElement.classList.remove("hidden"), 500);
+}
+
+function hideSuggestionsList() {
+  document.getElementById("locationSuggestion").classList.add("hidden");
+}
+
+// -------------
+// Events area
+// -------------
+
+// onclick alternative from HTML (check Add Pet button)
+document
+  .querySelector("#addVetButton")
+  .addEventListener("click", () => handleAddVetButtonClick());
+
+// -----------------
+// Fetch & validate data
+// https://api.geonames.org/searchJSON?q=london&maxRows=2&username=adelin2202
+// -----------------
+
+document.getElementById("vetLocation").addEventListener("input", (event) => {
+  const inputValue = event.target.value;
+
+  onInputChange(inputValue);
+});
