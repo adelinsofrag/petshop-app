@@ -36,6 +36,7 @@ function handleOnInputChange(selectedLocation) {
     fetchLocationSuggestions(selectedLocation);
   } else {
     hideSuggestionsList();
+    document.getElementById("addVetButton").disabled = false;
   }
 }
 

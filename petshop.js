@@ -45,6 +45,7 @@ const petShop = {
 
   updateAndRender() {
     this.saveToLocalStorage();
+
     updatePetsTable();
     updateVetsTable();
     updateAssignmentList();
@@ -54,6 +55,7 @@ const petShop = {
 
 function updateAssignmentList() {
   const assignmentList = document.getElementById("assignmentList");
+  
   if (petShop.data.assignments.length > 0) {
     assignmentList.innerHTML = petShop.data.assignments
       .map(
